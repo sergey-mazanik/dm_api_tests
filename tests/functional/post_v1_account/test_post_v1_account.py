@@ -8,7 +8,7 @@ def test_post_v1_account():
     # Регистрация пользователя
     account_api = AccountApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
-    login = 'smazanik36'
+    login = 'smazanik41'
     password = '123456'
     email = f'{login}@gmail.com'
     json_data = {
