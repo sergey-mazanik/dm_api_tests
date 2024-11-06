@@ -6,7 +6,7 @@ from json import loads
 def test_post_v1_account():
     # Регистрация пользователя
 
-    login = 'smazanik4'
+    login = 'smazanik5'
     password = '123456'
     email = f'{login}@gmail.com'
 
