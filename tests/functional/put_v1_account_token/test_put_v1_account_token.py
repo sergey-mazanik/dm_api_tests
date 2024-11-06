@@ -4,11 +4,11 @@ from dm_api_account.apis.account_api import AccountApi
 from api_mailhog.apis.mailhog_api import MailhogApi
 
 
-def test_post_v1_account():
+def test_put_v1_account_token():
     # Регистрация пользователя
     account_api = AccountApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
-    login = 'smazanik26'
+    login = 'smazanik30'
     password = '123456'
     email = f'{login}@gmail.com'
     json_data = {
@@ -30,6 +30,11 @@ def test_post_v1_account():
     print(token)
     assert token is not None, f'Token for user {login} does not received!'
 
+    # Активация пользователя
+    response = account_api.put_v1_account_token(token=token)
+    print_log(response=response)
+    assert response.status_code == 200, 'User does not activated!'
+
 
 def get_activation_token_by_login(login, response):
     token = None
@@ -47,7 +52,7 @@ def print_log(response):
         URL: {response.request.url}
         METHOD: {response.request.method}
         JSON:   {response.request.body}
-        
+
     RESPONSE:    
         STATUS_CODE: {response.status_code}
         CONTENT: {response.content}
