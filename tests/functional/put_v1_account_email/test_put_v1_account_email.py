@@ -10,7 +10,7 @@ def test_put_v1_account_email():
     account_api = AccountApi(host='http://5.63.153.31:5051')
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
-    login = 'smazanik29'
+    login = 'smazanik39'
     password = '123456'
     email = f'{login}@gmail.com'
     new_email = f'{login}+1@gmail.com'
