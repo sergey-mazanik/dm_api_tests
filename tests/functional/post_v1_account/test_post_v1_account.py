@@ -10,22 +10,22 @@ def test_post_v1_account():
     account_api = AccountApi(host='http://5.63.153.31:5051')
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
-    login = 'smazanik13'
+    login = 'smazanik20'
     password = '123456'
     email = f'{login}@gmail.com'
+    new_email = f'{login}+1@gmail.com'
     json_data = {
         'login': login,
         'email': email,
         'password': password
     }
     response = account_api.post_v1_account(json_data=json_data)
-    print(response.status_code)
-    print(response.text)
+    print_log(response=response)
     assert response.status_code == 201, f'User is not created! {response.json()}'
 
-    # Получить письмо из почтового сервера
+    # Получить письма из почтового сервера
     response = mailhog_api.get_api_v2_messages()
-    print(response.status_code)
+    print_log_without_response_body(response=response)
     assert response.status_code == 200, 'Email does not received!'
 
     # Получить активационный токен
@@ -35,8 +35,7 @@ def test_post_v1_account():
 
     # Активация пользователя
     response = account_api.put_v1_account_token(token=token)
-    print(response.status_code)
-    print(response.text)
+    print_log(response=response)
     assert response.status_code == 200, 'User does not activated!'
 
     # Авторизоваться
@@ -46,9 +45,64 @@ def test_post_v1_account():
         'rememberMe': True,
     }
     response = login_api.post_v1_account_login(json_data=json_data)
-    print(response.status_code)
-    print(response.text)
+    print_log(response=response)
     assert response.status_code == 200, 'User does not authorize!'
+
+    # Получить токен авторизации
+    auth_token = response.headers['X-Dm-Auth-Token']
+
+    # Изменить емейл
+    json_data = {
+        "login": login,
+        "password": password,
+        "email": new_email
+    }
+    response = account_api.put_v1_account_email(json_data=json_data)
+    print_log(response=response)
+    assert response.status_code == 200, 'Email does not change!'
+
+    # Разлогинится
+    headers = {
+        'X-Dm-Auth-Token': auth_token
+    }
+    response = login_api.delete_v1_account_login(headers=headers)
+    print_log(response=response)
+    assert response.status_code == 204, 'User is not unauthorized!'
+
+    # Авторизоваться (ожидаем 403)
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+    response = login_api.post_v1_account_login(json_data=json_data)
+    print_log(response=response)
+    assert response.status_code == 403, 'Here should be an error!'
+
+    # Получить письма из почтового сервиса
+    response = mailhog_api.get_api_v2_messages()
+    print_log_without_response_body(response=response)
+    assert response.status_code == 200, 'Email does not received!'
+
+    # Получить токен для смены емейла
+    token = get_activation_token_by_login(login, response)
+    print(token)
+    assert token is not None, f'Token for user {login} does not received!'
+
+    # Активировать токен
+    response = account_api.put_v1_account_token(token=token)
+    print_log(response=response)
+    assert response.status_code == 200, 'User does not activated!'
+
+    # Авторизоваться
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+    response = login_api.post_v1_account_login(json_data=json_data)
+    print_log(response=response)
+    assert response.status_code == 200, 'Here should be an error!'
 
 
 def get_activation_token_by_login(login, response):
@@ -59,3 +113,30 @@ def get_activation_token_by_login(login, response):
         if user_login == login:
             token = user_data['ConfirmationLinkUrl'].split('/')[-1]
     return token
+
+
+def print_log(response):
+    log = f"""
+    REQUEST:
+        URL: {response.request.url}
+        METHOD: {response.request.method}
+        JSON:   {response.request.body}
+        
+    RESPONSE:    
+        STATUS_CODE: {response.status_code}
+        CONTENT: {response.content}
+    """
+    print(log)
+
+
+def print_log_without_response_body(response):
+    log = f"""
+        REQUEST:
+            URL: {response.request.url}
+            METHOD: {response.request.method}
+            JSON:   {response.request.body}
+
+        RESPONSE:    
+            STATUS_CODE: {response.status_code}
+        """
+    print(log)
