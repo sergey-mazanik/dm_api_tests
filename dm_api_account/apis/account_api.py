@@ -1,5 +1,7 @@
 import requests
 
+from main import response
+
 
 class AccountApi:
     def __init__(
@@ -40,5 +42,19 @@ class AccountApi:
         response = requests.put(
             url=f'{self.host}/v1/account/{token}',
             headers=headers
+        )
+        return response
+
+    def put_v1_account_email(
+            self,
+            json_data
+    ):
+        """
+        Change registered user email
+        :return:
+        """
+        response = requests.put(
+            url=f'{self.host}/v1/account/email',
+            json=json_data
         )
         return response
