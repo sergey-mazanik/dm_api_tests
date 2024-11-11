@@ -2,6 +2,8 @@ from json import loads
 
 from dm_api_account.apis.account_api import AccountApi
 from api_mailhog.apis.mailhog_api import MailhogApi
+from restclient.configuration import Configuration as MailhogConfiguration
+from restclient.configuration import Configuration as DmApiConfiguration
 import structlog
 
 structlog.configure(
@@ -17,13 +19,20 @@ structlog.configure(
 
 def test_put_v1_account_token():
     # Регистрация пользователя
-    account_api = AccountApi(
-        host='http://5.63.153.31:5051'
-        )
-    mailhog_api = MailhogApi(
+    mailhog_configuration = MailhogConfiguration(
         host='http://5.63.153.31:5025'
-        )
-    login = 'smazanik50'
+    )
+    dm_api_configuration = DmApiConfiguration(
+        host='http://5.63.153.31:5051',
+        disable_log=False
+    )
+    account_api = AccountApi(
+        configuration=dm_api_configuration
+    )
+    mailhog_api = MailhogApi(
+        configuration=mailhog_configuration
+    )
+    login = 'smazanik61'
     password = '123456'
     email = f'{login}@gmail.com'
     json_data = {
