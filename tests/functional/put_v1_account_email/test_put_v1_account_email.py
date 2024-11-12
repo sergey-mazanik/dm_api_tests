@@ -17,13 +17,12 @@ structlog.configure(
 
 
 def test_put_v1_account_email():
-    # Регистрация пользователя
     mailhog_configuration = MailhogConfiguration(
         host='http://5.63.153.31:5025'
     )
     dm_api_configuration = DmApiConfiguration(
         host='http://5.63.153.31:5051',
-        # disable_log=False
+        disable_log=False
     )
     account = DMApiAccount(
         configuration=dm_api_configuration
@@ -36,33 +35,39 @@ def test_put_v1_account_email():
         mailhog=mailhog
     )
 
-    login = 'smazanik94'
+    login = 'smazanik130'
     password = '123456'
     email = f'{login}@gmail.com'
     new_email = f'{login}+1@gmail.com'
 
-    account_helper.register_and_activate_new_user(
+    account_helper.register_new_user(
         login=login,
-        password=password,
-        email=email
-        )
-    account_helper.user_login_with_auth_token(
+        email=email,
+        password=password
+    )
+
+    account_helper.activate_user(
+        login=login
+    )
+
+    account_helper.get_auth_token(
         login=login,
         password=password
-        )
+    )
 
     account_helper.change_email(
         login=login,
         password=password,
-        email=new_email,
+        email=new_email
     )
 
-    account_helper.login_without_submit_new_email(
+    account_helper.user_login(
         login=login,
-        password=password
+        password=password,
+        expected_status_code=403
     )
 
-    account_helper.activate_new_email(
+    account_helper.activate_user(
         login=login
     )
 

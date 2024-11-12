@@ -17,7 +17,6 @@ structlog.configure(
 
 
 def test_post_v1_account_login():
-    # Регистрация пользователя
     mailhog_configuration = MailhogConfiguration(
         host='http://5.63.153.31:5025'
     )
@@ -36,9 +35,21 @@ def test_post_v1_account_login():
         mailhog=mailhog
     )
 
-    login = 'smazanik84'
+    login = 'smazanik129'
     password = '123456'
     email = f'{login}@gmail.com'
 
-    account_helper.register_and_activate_new_user(login=login, password=password, email=email)
-    account_helper.user_login(login=login, password=password)
+    account_helper.register_new_user(
+        login=login,
+        email=email,
+        password=password
+    )
+
+    account_helper.activate_user(
+        login=login
+    )
+
+    account_helper.user_login(
+        login=login,
+        password=password
+    )

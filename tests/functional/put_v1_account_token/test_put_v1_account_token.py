@@ -17,7 +17,6 @@ structlog.configure(
 
 
 def test_put_v1_account_token():
-    # Регистрация пользователя
     mailhog_configuration = MailhogConfiguration(
         host='http://5.63.153.31:5025'
     )
@@ -36,13 +35,15 @@ def test_put_v1_account_token():
         mailhog=mailhog
     )
 
-    login = 'smazanik86'
+    login = 'smazanik131'
     password = '123456'
     email = f'{login}@gmail.com'
-    json_data = {
-        'login': login,
-        'email': email,
-        'password': password
-    }
 
-    account_helper.register_and_activate_new_user(login=login, email=email, password=password)
+    account_helper.register_new_user(
+        login=login,
+        email=email,
+        password=password
+    )
+    account_helper.activate_user(
+        login=login
+    )

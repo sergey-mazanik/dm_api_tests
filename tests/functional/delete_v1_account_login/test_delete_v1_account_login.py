@@ -35,17 +35,25 @@ def test_delete_v1_account_login():
         mailhog=mailhog
     )
 
-    login = 'smazanik83'
+    login = 'smazanik128'
     password = '123456'
     email = f'{login}@gmail.com'
 
-    account_helper.register_and_activate_new_user(
+    account_helper.register_new_user(
         login=login,
-        password=password,
-        email=email
-        )
+        email=email,
+        password=password
+    )
 
-    account_helper.logout_current_user(
+    account_helper.activate_user(
+        login=login
+    )
+
+    account_helper.get_auth_token(
         login=login,
         password=password
+    )
+
+    account_helper.logout_current_user(
+        auth_token=AccountHelper.auth_token
     )
