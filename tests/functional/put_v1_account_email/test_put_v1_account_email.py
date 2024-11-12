@@ -35,7 +35,7 @@ def test_put_v1_account_email():
         mailhog=mailhog
     )
 
-    login = 'smazanik130'
+    login = 'smazanik157'
     password = '123456'
     email = f'{login}@gmail.com'
     new_email = f'{login}+1@gmail.com'
