@@ -23,7 +23,7 @@ def test_put_v1_account_email():
     )
     dm_api_configuration = DmApiConfiguration(
         host='http://5.63.153.31:5051',
-        disable_log=False
+        # disable_log=False
     )
     account = DMApiAccount(
         configuration=dm_api_configuration
@@ -36,7 +36,7 @@ def test_put_v1_account_email():
         mailhog=mailhog
     )
 
-    login = 'smazanik85'
+    login = 'smazanik94'
     password = '123456'
     email = f'{login}@gmail.com'
     new_email = f'{login}+1@gmail.com'
@@ -51,7 +51,7 @@ def test_put_v1_account_email():
         password=password
         )
 
-    account_helper.login_change_email_logout(
+    account_helper.change_email(
         login=login,
         password=password,
         email=new_email,
