@@ -1,6 +1,7 @@
-def test_post_v1_account_login(
+def test_delete_v1_account_login(
         account_helper,
-        prepare_user
+        prepare_user,
+        auth_account_helper
 ):
     login = prepare_user.login
     email = prepare_user.email
@@ -12,7 +13,9 @@ def test_post_v1_account_login(
         password=password
     )
 
-    account_helper.user_login(
+    account_helper.auth_client(
         login=login,
         password=password
     )
+
+    account_helper.logout_user_from_all_devices()
