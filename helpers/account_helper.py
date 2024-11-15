@@ -130,15 +130,17 @@ class AccountHelper:
         return response
 
     def logout_current_user(
-            self
+            self,
+            **kwargs
     ):
-        response = self.dm_account_api.login_api.delete_v1_account_login()
+        response = self.dm_account_api.login_api.delete_v1_account_login(**kwargs)
         assert response.status_code == 204, 'User is not unauthorized!'
 
     def logout_user_from_all_devices(
-            self
+            self,
+            **kwargs
     ):
-        response = self.dm_account_api.login_api.delete_v1_account_login_all()
+        response = self.dm_account_api.login_api.delete_v1_account_login_all(**kwargs)
         assert response.status_code == 204, 'User is not unauthorized!'
 
     def change_email(
