@@ -2,6 +2,7 @@ from json import loads
 
 from dm_api_account.apis.account_api import AccountApi
 from api_mailhog.apis.mailhog_api import MailhogApi
+
 from restclient.configuration import Configuration as MailhogConfiguration
 from restclient.configuration import Configuration as DmApiConfiguration
 import structlog
@@ -19,6 +20,7 @@ structlog.configure(
 
 def test_put_v1_account_token():
     # Регистрация пользователя
+
     mailhog_configuration = MailhogConfiguration(
         host='http://5.63.153.31:5025'
     )
@@ -40,6 +42,7 @@ def test_put_v1_account_token():
         'email': email,
         'password': password
     }
+
     response = account_api.post_v1_account(
         json_data=json_data
         )
@@ -47,6 +50,7 @@ def test_put_v1_account_token():
 
     # Получить письма из почтового сервера
     response = mailhog_api.get_api_v2_messages()
+
     assert response.status_code == 200, 'Email does not received!'
 
     # Получить активационный токен
@@ -69,6 +73,7 @@ def test_put_v1_account_token():
 def get_activation_token_by_login(login, response):
     token = None
     for item in response.json()['items']:
+
         user_data = loads(
             item['Content']['Body']
             )
