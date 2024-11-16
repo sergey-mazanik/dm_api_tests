@@ -1,7 +1,47 @@
+import time
 from json import loads
+from retrying import retry
 
 from services.api_mailhog import MailHogApi
 from services.dm_api_account import DMApiAccount
+
+
+def retry_if_result_none(
+        result
+        ):
+    """Return True if we should retry (in this case when result is None), False otherwise"""
+    return result is None
+
+
+def retrier(
+        function
+):
+    def wrapper(
+            *args,
+            **kwargs
+    ):
+        token = None
+        count = 0
+        while token is None:
+            print(
+                f'Attempt number - {count + 1}'
+            )
+            token = function(
+                *args,
+                **kwargs
+            )
+            count += 1
+            if count == 5:
+                raise AssertionError(
+                    'Too many retries to get activation token'
+                )
+            if token:
+                return token
+            time.sleep(
+                0.5
+            )
+
+    return wrapper
 
 
 class AccountHelper:
@@ -104,12 +144,8 @@ class AccountHelper:
             self,
             login: str
     ):
-        response = self.mailhog.mailhog_api.get_api_v2_messages()
-        assert response.status_code == 200, 'Email does not received!'
-
         token = self.get_activation_token_by_login(
-            login=login,
-            response=response
+            login=login
         )
         assert token is not None, f'Token for user {login} does not received!'
 
@@ -119,12 +155,18 @@ class AccountHelper:
         assert response.status_code == 200, 'User does not activated!'
         return response
 
-    @staticmethod
+    # @retrier
+    @retry(
+        stop_max_attempt_number=5,
+        retry_on_result=retry_if_result_none,
+        wait_fixed=1000
+        )
     def get_activation_token_by_login(
+            self,
             login,
-            response
     ):
         token = None
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
         for item in response.json()['items']:
             user_data = loads(
                 item['Content']['Body']

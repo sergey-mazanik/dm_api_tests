@@ -38,7 +38,7 @@ def test_delete_v1_account_login():
         mailhog=mailhog
     )
 
-    login = 'smazanik128'
+    login = 'smazanik155'
     password = '123456'
     email = f'{login}@gmail.com'
 

@@ -35,7 +35,7 @@ def test_put_v1_account_token():
         mailhog=mailhog
     )
 
-    login = 'smazanik131'
+    login = 'smazanik158'
     password = '123456'
     email = f'{login}@gmail.com'
 

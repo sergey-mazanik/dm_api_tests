@@ -35,7 +35,7 @@ def test_post_v1_account():
         mailhog=mailhog
     )
 
-    login = 'smazanik132'
+    login = 'smazanik159'
     password = '123456'
     email = f'{login}@gmail.com'
 
