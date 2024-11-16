@@ -6,7 +6,7 @@ from restclient.client import RestClient
 
 class LoginApi(
     RestClient
-    ):
+):
 
     def post_v1_account_login(
             self,
@@ -26,7 +26,7 @@ class LoginApi(
 
     def delete_v1_account_login(
             self,
-            headers
+            **kwargs
     ):
         """
          Logout as current user
@@ -36,6 +36,21 @@ class LoginApi(
 
         response = self.delete(
             path=f'/v1/account/login',
-            headers=headers
+            **kwargs
+        )
+        return response
+
+    def delete_v1_account_login_all(
+            self,
+            **kwargs
+    ):
+        """
+        Logout from every device
+        :param kwargs:
+        :return:
+        """
+        response = self.delete(
+            path='/v1/account/login/all',
+            **kwargs
         )
         return response
