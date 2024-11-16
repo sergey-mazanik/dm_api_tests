@@ -39,6 +39,7 @@ def test_post_v1_account_login():
     password = '123456'
     email = f'{login}@gmail.com'
 
+
     account_helper.register_new_user(
         login=login,
         email=email,
@@ -48,6 +49,7 @@ def test_post_v1_account_login():
     account_helper.activate_user(
         login=login
     )
+
 
     account_helper.user_login(
         login=login,

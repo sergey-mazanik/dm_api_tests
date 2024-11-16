@@ -1,7 +1,9 @@
+
 import structlog
 from helpers.account_helper import AccountHelper
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
+
 from restclient.configuration import Configuration as MailhogConfiguration
 from restclient.configuration import Configuration as DmApiConfiguration
 
@@ -14,6 +16,7 @@ structlog.configure(
         )
     ]
 )
+
 
 
 def test_delete_v1_account_login():
@@ -39,6 +42,7 @@ def test_delete_v1_account_login():
     password = '123456'
     email = f'{login}@gmail.com'
 
+
     account_helper.register_new_user(
         login=login,
         email=email,
@@ -53,6 +57,7 @@ def test_delete_v1_account_login():
         login=login,
         password=password
     )
+
 
     account_helper.logout_current_user(
         auth_token=AccountHelper.auth_token

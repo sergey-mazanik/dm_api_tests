@@ -1,5 +1,6 @@
 import requests
 
+
 from restclient.client import RestClient
 
 
@@ -18,6 +19,7 @@ class MailhogApi(
         params = {
             'limit': limit,
         }
+
         response = self.get(
             path=f'/api/v2/messages',
             params=params,

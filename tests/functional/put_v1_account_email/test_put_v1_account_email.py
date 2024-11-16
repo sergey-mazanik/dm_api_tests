@@ -30,6 +30,7 @@ def test_put_v1_account_email():
     mailhog = MailHogApi(
         configuration=mailhog_configuration
     )
+
     account_helper = AccountHelper(
         dm_account_api=account,
         mailhog=mailhog
