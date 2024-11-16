@@ -1,5 +1,6 @@
 import requests
 
+
 from restclient.client import RestClient
 
 
@@ -16,6 +17,7 @@ class AccountApi(
         :param json_data:
         :return:
         """
+
         response = self.post(
             path=f'/v1/account',
             json=json_data
@@ -34,6 +36,7 @@ class AccountApi(
         headers = {
             'accept': 'text/plain',
         }
+
         response = self.put(
             path=f'/v1/account/{token}',
             headers=headers
@@ -48,6 +51,7 @@ class AccountApi(
         Change registered user email
         :return:
         """
+
         response = self.put(
             path=f'/v1/account/email',
             json=json_data
