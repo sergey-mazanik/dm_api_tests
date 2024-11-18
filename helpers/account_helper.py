@@ -226,7 +226,7 @@ class AccountHelper:
             self,
             login: str,
             email: str,
-            validate_response=False
+            validate_response=True
     ):
         reset_password = ResetPassword(
             login=login,

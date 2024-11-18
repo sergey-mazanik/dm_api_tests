@@ -2,7 +2,7 @@ def test_get_v1_account_auth(
         auth_account_helper
 ):
 
-    auth_account_helper.get_user_info()
+    auth_account_helper.get_user_info(validate_response=True)
 
 
 def test_get_v1_account_no_auth(

@@ -5,6 +5,7 @@ from enum import Enum
 from typing import (
     List,
     Optional,
+    Union,
 )
 
 from pydantic import (
@@ -74,4 +75,4 @@ class UserEnvelope(
         extra='forbid'
     )
     resource: Optional[User] = None
-    metadata: Optional[str] = None
+    metadata: Union[str, dict] = None
