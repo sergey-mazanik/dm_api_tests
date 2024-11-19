@@ -73,7 +73,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.post_v1_account(
             registration=registration
         )
-        assert response.status_code == 201, f'User is not created! {response.json()}'
+        # assert response.status_code == 201, f'User is not created! {response.json()}'
         return response
 
     def activate_user(
@@ -124,7 +124,6 @@ class AccountHelper:
             login: str,
             password: str,
             remember_me: bool = True,
-            expected_status_code: int = 200,
             validate_response=False,
             validate_headers=False
     ):
@@ -139,7 +138,6 @@ class AccountHelper:
         )
         if validate_headers:
             assert response.headers['X-Dm-Auth-Token'], 'User does not get token'
-            assert response.status_code == expected_status_code, 'User does not authorize!'
         return response
 
     def logout_current_user(
@@ -147,14 +145,16 @@ class AccountHelper:
             **kwargs
     ):
         response = self.dm_account_api.login_api.delete_v1_account_login(**kwargs)
-        assert response.status_code == 204, 'User is not unauthorized!'
+        # assert response.status_code == 204, 'User is not unauthorized!'
+        return response
 
     def logout_user_from_all_devices(
             self,
             **kwargs
     ):
         response = self.dm_account_api.login_api.delete_v1_account_login_all(**kwargs)
-        assert response.status_code == 204, 'User is not unauthorized!'
+        # assert response.status_code == 204, 'User is not unauthorized!'
+        return response
 
     def change_email(
             self,

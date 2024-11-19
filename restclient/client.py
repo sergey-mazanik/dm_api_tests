@@ -98,6 +98,7 @@ class RestClient:
                 url=full_url,
                 **kwargs
             )
+            rest_response.raise_for_status()
             return rest_response
 
         log.msg(
@@ -136,6 +137,7 @@ class RestClient:
                 rest_response
             )
         )
+        rest_response.raise_for_status()
         return rest_response
 
     @staticmethod

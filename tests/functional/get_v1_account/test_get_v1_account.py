@@ -2,6 +2,7 @@ from hamcrest import (
     assert_that, has_property, all_of, any_of, has_properties, equal_to, greater_than, has_length, not_none, none, is_,
     close_to, less_than_or_equal_to, greater_than_or_equal_to,
 )
+from checkers.http_checkers import check_status_code_http
 
 
 def test_get_v1_account_auth(
@@ -39,5 +40,5 @@ def test_get_v1_account_auth(
 def test_get_v1_account_no_auth(
         account_helper
 ):
-
-    account_helper.get_user_info()
+    with check_status_code_http(401, 'User must be authenticated'):
+        account_helper.get_user_info()
