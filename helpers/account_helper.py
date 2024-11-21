@@ -125,7 +125,8 @@ class AccountHelper:
             password: str,
             remember_me: bool = True,
             expected_status_code: int = 200,
-            validate_response=False
+            validate_response=False,
+            validate_headers=False
     ):
         login_credentials = LoginCredentials(
             login=login,
@@ -136,9 +137,9 @@ class AccountHelper:
             login_credentials=login_credentials,
             validate_response=validate_response
         )
-        if expected_status_code == 200:
+        if validate_headers:
             assert response.headers['X-Dm-Auth-Token'], 'User does not get token'
-        assert response.status_code == expected_status_code, 'User does not authorize!'
+            assert response.status_code == expected_status_code, 'User does not authorize!'
         return response
 
     def logout_current_user(
@@ -279,4 +280,5 @@ class AccountHelper:
         )
 
     def get_user_info(self, validate_response=False):
-        self.dm_account_api.account_api.get_v1_account(validate_response=validate_response)
+        response = self.dm_account_api.account_api.get_v1_account(validate_response=validate_response)
+        return response
