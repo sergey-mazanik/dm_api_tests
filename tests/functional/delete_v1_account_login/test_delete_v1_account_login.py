@@ -1,3 +1,6 @@
+from assertpy import assert_that, soft_assertions
+
+
 def test_delete_v1_account_login(
         account_helper,
         prepare_user,
@@ -18,4 +21,8 @@ def test_delete_v1_account_login(
         password=password
     )
 
-    account_helper.logout_current_user()
+    response = account_helper.logout_current_user()
+    print(response)
+    with soft_assertions():
+        assert_that(response.status_code).is_equal_to(204)
+        assert_that(response.request.headers).contains_key('X-Dm-Auth-Token')

@@ -1,4 +1,5 @@
 annotated-types==0.7.0
+assertpy==1.1
 certifi==2024.8.30
 charset-normalizer==3.4.0
 curlify==2.2.1

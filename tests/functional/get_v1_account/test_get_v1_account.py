@@ -1,8 +1,9 @@
 from hamcrest import (
-    assert_that, has_property, all_of, any_of, has_properties, equal_to, greater_than, has_length, not_none, none, is_,
+    assert_that as hamcrest_assert, has_property, all_of, any_of, has_properties, equal_to, greater_than, has_length, not_none, none, is_,
     close_to, less_than_or_equal_to, greater_than_or_equal_to,
 )
 from checkers.http_checkers import check_status_code_http
+from assertpy import assert_that, soft_assertions
 
 
 def test_get_v1_account_auth(
@@ -11,7 +12,7 @@ def test_get_v1_account_auth(
 
     response = auth_account_helper.get_user_info(validate_response=True)
 
-    assert_that(
+    hamcrest_assert(
         response, all_of(
             has_property('resource', has_property('login', has_length(greater_than(5)))),
             has_property('resource', has_property('roles', not_none())),
@@ -36,6 +37,10 @@ def test_get_v1_account_auth(
         )
     )
 
+    with soft_assertions():
+        assert_that(response.resource.login).starts_with('smazanik')
+        assert_that(response.resource.info).is_instance_of(str)
+        assert_that(response.resource.info).is_empty()
 
 def test_get_v1_account_no_auth(
         account_helper
