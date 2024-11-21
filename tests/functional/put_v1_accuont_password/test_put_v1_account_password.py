@@ -1,3 +1,6 @@
+from checkers.http_checkers import check_status_code_http
+
+
 def test_put_v1_account_password(
         account_helper,
         prepare_user
@@ -25,11 +28,14 @@ def test_put_v1_account_password(
         new_password=new_password
     )
 
-    account_helper.user_login(
-        login=login,
-        password=password,
-        expected_status_code=400
-    )
+    with check_status_code_http(
+        expected_status_code=400,
+        expected_message='One or more validation errors occurred.'
+    ):
+        account_helper.user_login(
+            login=login,
+            password=password,
+        )
 
     account_helper.user_login(
         login=login,
