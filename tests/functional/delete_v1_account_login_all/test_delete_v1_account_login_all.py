@@ -1,3 +1,6 @@
+from checkers.http_checkers import check_status_code_http
+
+
 def test_delete_v1_account_login(
         account_helper,
         prepare_user,
@@ -18,4 +21,5 @@ def test_delete_v1_account_login(
         password=password
     )
 
-    account_helper.logout_user_from_all_devices()
+    with check_status_code_http(expected_status_code=204):
+        account_helper.logout_user_from_all_devices()
