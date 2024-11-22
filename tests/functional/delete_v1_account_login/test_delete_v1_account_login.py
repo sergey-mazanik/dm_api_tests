@@ -1,4 +1,5 @@
-from assertpy import assert_that, soft_assertions
+from checkers.delete_v1_account_login import DeleteV1AccountLogin
+from checkers.http_checkers import check_status_code_http
 
 
 def test_delete_v1_account_login(
@@ -21,8 +22,7 @@ def test_delete_v1_account_login(
         password=password
     )
 
-    response = account_helper.logout_current_user()
-    print(response)
-    with soft_assertions():
-        assert_that(response.status_code).is_equal_to(204)
-        assert_that(response.request.headers).contains_key('X-Dm-Auth-Token')
+    with check_status_code_http(expected_status_code=204):
+        response = account_helper.logout_current_user()
+
+    DeleteV1AccountLogin.check_response_by_assertpy(response)
