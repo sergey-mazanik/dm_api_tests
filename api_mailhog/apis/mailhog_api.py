@@ -1,3 +1,4 @@
+import allure
 import requests
 
 
@@ -8,6 +9,7 @@ class MailhogApi(
     RestClient
     ):
 
+    @allure.step('Get users emails')
     def get_api_v2_messages(
             self,
             limit='2'
