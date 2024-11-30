@@ -8,9 +8,46 @@ permissions:
   id-token: write
 
 jobs:
-  test:
-    name: Python test
+  download-history:
     runs-on: ubuntu-latest
+    name: Download history
+    steps:
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: >
+          ARTIFACT_ID=$(curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/sergey-mazanik/dm_api_tests/actions/artifacts?name=allure-results" | python3 -c "import sys, json; print(json.load(sys.stdin)['artifacts'][0]['id'])")
+          &&
+          curl -L
+          -H "Accept: application/vnd.github+json"
+          -H "Authorization: Bearer ${{ secrets.TOKEN }}"
+          -H "X-GitHub-Api-Version: 2022-11-28"
+          https://api.github.com/repos/sergey-mazanik/dm_api_tests/actions/artifacts/$ARTIFACT_ID/zip 
+          -o artifacts.zip
+          &&
+          REPORT_ID=$(curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/sergey-mazanik/dm_api_tests/actions/artifacts?name=github-pages" | python3 -c "import sys, json; print(json.load(sys.stdin)['artifacts'][0]['id']);") 
+          &&
+          curl -L
+          -H "Accept: application/vnd.github+json"
+          -H "Authorization: Bearer ${{ secrets.TOKEN }}"
+          -H "X-GitHub-Api-Version: 2022-11-28"
+          https://api.github.com/repos/sergey-mazanik/dm_api_tests/actions/artifacts/$REPORT_ID/zip 
+          -o pages.zip
+      - run: mkdir allure-results && unzip artifacts.zip -d allure-results
+      - run: mkdir old_pages pages_history && unzip pages.zip -d old_pages && tar -xvf old_pages/artifact.tar -C pages_history
+      - run: cp pages_history/history/* allure-results && cp -r pages_history/history allure-results
+      - name: Save allure results
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 1
+
+  test:
+    runs-on: ubuntu-latest
+    needs: download-history
+    name: Python test
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -22,6 +59,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
 
       - name: Run tests
         run: |
@@ -44,7 +84,8 @@ jobs:
         with:
           distribution: 'microsoft'
           java-version: '17'
-      - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -xvzf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
+      - name: Install Allure
+        run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -zxvf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
       - name: Download allure results
         uses: actions/download-artifact@v3
       - run: allure generate -c allure-results -o _site
@@ -67,3 +108,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1.2.9
+      - run: echo "https://sergey-mazanik.github.io/dm_api_tests/"
