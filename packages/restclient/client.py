@@ -6,11 +6,10 @@ from requests import (
 import structlog
 import uuid
 
-from swagger_coverage_py.listener import CoverageListener
 from swagger_coverage_py.request_schema_handler import RequestSchemaHandler
 from swagger_coverage_py.uri import URI
-from restclient.configuration import Configuration
-from restclient.utiltties import allure_attach
+from packages.restclient.configuration import Configuration
+from packages.restclient.utiltties import allure_attach
 
 
 class RestClient:
