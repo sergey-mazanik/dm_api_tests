@@ -6,6 +6,9 @@ from requests import (
 import structlog
 import uuid
 
+from swagger_coverage_py.listener import CoverageListener
+from swagger_coverage_py.request_schema_handler import RequestSchemaHandler
+from swagger_coverage_py.uri import URI
 from restclient.configuration import Configuration
 from restclient.utiltties import allure_attach
 
@@ -125,6 +128,12 @@ class RestClient:
             url=full_url,
             **kwargs
         )
+
+        uri = URI(host=self.host, base_path='', unformatted_path=path, uri_params=kwargs.get('params'))
+        RequestSchemaHandler(
+            uri, method.lower(), rest_response, kwargs
+        ).write_schema()
+
         curl = curlify.to_curl(
             rest_response.request
         )

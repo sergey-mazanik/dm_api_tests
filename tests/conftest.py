@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytest
 import structlog
+from swagger_coverage_py.reporter import CoverageReporter
 from vyper import v
 from pathlib import Path
 from helpers.account_helper import AccountHelper
@@ -27,6 +28,14 @@ options = (
     'user.login',
     'user.password'
 )
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_swagger_coverage():
+    reporter = CoverageReporter(api_name="dm-api-account", host=v.get('service.dm_api_account'))
+    reporter.setup("/swagger/Account/swagger.json")
+    yield
+    reporter.generate_report()
+    reporter.cleanup_input_files()
 
 @pytest.fixture(scope='session', autouse=True)
 def set_config(request):
