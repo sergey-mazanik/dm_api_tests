@@ -3,6 +3,8 @@ from datetime import datetime
 
 import pytest
 import structlog
+from vyper import v
+from pathlib import Path
 from helpers.account_helper import AccountHelper
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
@@ -19,11 +21,33 @@ structlog.configure(
     ]
 )
 
+options = (
+    'service.dm_api_account',
+    'service.mailhog',
+    'user.login',
+    'user.password'
+)
+
+@pytest.fixture(scope='session', autouse=True)
+def set_config(request):
+    config = Path(__file__).joinpath('../../').joinpath('config')
+    config_name = request.config.getoption('--env')
+    v.set_config_name(config_name)
+    v.add_config_path(config)
+    v.read_in_config()
+    for option in options:
+        v.set(f'{option}', request.config.getoption(f'--{option}'))
+
+def pytest_addoption(parser):
+    parser.addoption('--env', action='store', default='stg', help='run stg')
+
+    for option in options:
+        parser.addoption(f'--{option}', action='store', default=None)
 
 @pytest.fixture()
 def mailhog_api():
     mailhog_configuration = MailhogConfiguration(
-        host='http://5.63.153.31:5025'
+        host=v.get('service.mailhog')
     )
     mailhog_client = MailHogApi(
         configuration=mailhog_configuration
@@ -34,7 +58,7 @@ def mailhog_api():
 @pytest.fixture()
 def account_api():
     dm_api_configuration = DmApiConfiguration(
-        host='http://5.63.153.31:5051',
+        host=v.get('service.dm_api_account'),
         disable_log=False
     )
     account = DMApiAccount(
@@ -60,7 +84,7 @@ def auth_account_helper(
         mailhog_api
 ):
     dm_api_configuration = DmApiConfiguration(
-        host='http://5.63.153.31:5051',
+        host=v.get('service.dm_api_account'),
         disable_log=False
     )
     account = DMApiAccount(
@@ -72,8 +96,8 @@ def auth_account_helper(
         mailhog=mailhog_api
     )
     account_helper.auth_client(
-        login='smazanik130',
-        password='123456'
+        login=v.get('user.login'),
+        password=v.get('user.password')
     )
     return account_helper
 
@@ -85,7 +109,7 @@ def prepare_user():
         "%d_%m_%Y_%H_%M_%S_%f"
     )
     login = f'smazanik{data}'
-    password = '123456'
+    password = v.get('user.password')
     new_password = f'{password}7'
     email = f'{login}@gmail.com'
     new_email = f'{login}+1@gmail.com'
