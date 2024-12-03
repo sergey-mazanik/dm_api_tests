@@ -5,3 +5,7 @@ service:
 user:
   login: 'smazanik13'
   password: '123456'
+
+telegram:
+  token: '7199891104:AAGDNIIpLuxnMkz0rIIDcKq4GShAKJx9xQc'
+  chat_id: '-1002366478126'

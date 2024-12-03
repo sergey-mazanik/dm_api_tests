@@ -7,24 +7,31 @@ certifi==2024.8.30
 charset-normalizer==3.4.0
 curlify==2.2.1
 distconfig3==1.0.1
+environs==11.2.1
 Faker==33.0.0
 idna==3.10
 iniconfig==2.0.0
+marshmallow==3.23.1
 packaging==24.1
 pluggy==1.5.0
 pydantic==2.9.2
 pydantic_core==2.23.4
 PyHamcrest==2.1.0
+pyTelegramBotAPI==4.24.0
 pytest==8.3.3
+pytest-telegram-notifier==1.4.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 PyYAML==6.0.2
 requests==2.32.3
 retrying==1.3.4
+rootpath==0.1.0
 six==1.16.0
 structlog==24.4.0
+swagger-coverage @ https://github.com/sergey-mazanik/swagger-coverage-py/archive/refs/heads/master.zip#sha256=0feb0a4ef3b473185a8731c18fc7fda34e70fcf053d4956e7a3f7c2be8b4e33b
+telebot==0.0.5
 toml==0.10.2
 typing_extensions==4.12.2
 urllib3==2.2.3
 vyper-config==1.2.1
 watchdog==6.0.0
-swagger-coverage @ https://github.com/sergey-mazanik/swagger-coverage-py/archive/refs/heads/master.zip
