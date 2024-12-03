@@ -1,3 +1,4 @@
+import allure
 import requests
 
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -9,6 +10,7 @@ class LoginApi(
     RestClient
 ):
 
+    @allure.step('Authenticate via credentials')
     def post_v1_account_login(
             self,
             login_credentials: LoginCredentials,
@@ -29,6 +31,7 @@ class LoginApi(
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Logout as current user')
     def delete_v1_account_login(
             self,
             **kwargs
@@ -44,6 +47,7 @@ class LoginApi(
         )
         return response
 
+    @allure.step('Logout from every device')
     def delete_v1_account_login_all(
             self,
             **kwargs
