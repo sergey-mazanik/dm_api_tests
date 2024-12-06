@@ -8,7 +8,6 @@ from swagger_coverage_py.reporter import CoverageReporter
 from vyper import v
 from pathlib import Path
 from helpers.account_helper import AccountHelper
-from packages.notifier.bot import send_file
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 from packages.restclient.configuration import Configuration as MailhogConfiguration
@@ -39,7 +38,7 @@ def setup_swagger_coverage():
     reporter.setup("/swagger/Account/swagger.json")
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()
+    # reporter.cleanup_input_files()
     # send_file()
 
 @pytest.fixture(scope='session', autouse=True)
